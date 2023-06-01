@@ -15,8 +15,11 @@ import bgImage from "../assets/bg.png";
 import addBtn from "../assets/add.png";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "@react-navigation/native";
 
 const RegistrationScreen = () => {
+  const navigation = useNavigation();
+
   const [isInputLoginActive, setIsInputLoginActive] = useState(false);
   const [isInputEmailActive, setIsInputEmailActive] = useState(false);
   const [isInputPassActive, setIsInputPassActive] = useState(false);
@@ -35,6 +38,8 @@ const RegistrationScreen = () => {
     setLogin("");
     setEmail("");
     setPass("");
+
+    navigation.navigate("Home");
   };
 
   const toggleSecureTextEntry = () => {
@@ -87,7 +92,9 @@ const RegistrationScreen = () => {
             />
             <View style={styles.showBtnContainer}>
               <Pressable style={styles.showBtn} onPress={toggleSecureTextEntry}>
-                <Text style={styles.showBtnText}>Показати</Text>
+                <Text style={styles.showBtnText}>
+                  {secureTextEntry ? "Показати" : "Приховати"}
+                </Text>
               </Pressable>
             </View>
           </KeyboardAvoidingView>
@@ -95,7 +102,10 @@ const RegistrationScreen = () => {
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Зареєструватися</Text>
             </TouchableOpacity>
-            <Pressable style={styles.auth}>
+            <Pressable
+              style={styles.auth}
+              onPress={() => navigation.navigate("Login")}
+            >
               <Text style={styles.authText}>Вже є акаунт? Увійти</Text>
             </Pressable>
           </View>

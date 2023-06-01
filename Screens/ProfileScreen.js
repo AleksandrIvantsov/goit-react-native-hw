@@ -1,23 +1,48 @@
-import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Pressable,
+  Image,
+  ScrollView,
+} from "react-native";
+import logOut from "../assets/logOut.png";
+import bgImage from "../assets/bg.png";
+import removeBtn from "../assets/remove.png";
 import mapPin from "../assets/mapPin.png";
 import messageCircle from "../assets/messageCircle.png";
 import userPhoto from "../assets/userPhoto.jpg";
 import photo1 from "../assets/photo1.jpg";
 import photo2 from "../assets/photo2.jpg";
 import photo3 from "../assets/photo3.jpg";
+import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "@react-navigation/native";
 
-const PostsScreen = () => {
+const ProfileScreen = () => {
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.publications}>
-        <View style={styles.userInfo}>
-          <Image source={userPhoto} style={styles.userPhoto} />
-          <View>
-            <Text style={styles.userNameText}>Natali Romanova</Text>
-            <Text style={styles.userEmailText}>email@example.com</Text>
-          </View>
+    <ImageBackground
+      source={bgImage}
+      resizeMode="cover"
+      style={styles.container}
+    >
+      <StatusBar style="auto" />
+      <View style={styles.formContainer}>
+        <View style={styles.avatarConainer}>
+          <Image style={styles.avatar} source={userPhoto} />
+          <Image style={styles.addBtn} source={removeBtn} />
         </View>
-
+        <Pressable
+          style={styles.logOutIcon}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Image source={logOut} />
+        </Pressable>
+        <Text style={styles.heading}>Natali Romanova</Text>
+      </View>
+      <ScrollView style={styles.publications}>
         <View style={styles.publicationItem}>
           <View style={styles.imageThumb}>
             <Image source={photo1} style={styles.publicationItemPhoto} />
@@ -36,7 +61,6 @@ const PostsScreen = () => {
             </View>
           </View>
         </View>
-
         <View style={styles.publicationItem}>
           <View style={styles.imageThumb}>
             <Image source={photo2} style={styles.publicationItemPhoto} />
@@ -53,7 +77,6 @@ const PostsScreen = () => {
             </View>
           </View>
         </View>
-
         <View style={styles.publicationItem}>
           <View style={styles.imageThumb}>
             <Image source={photo3} style={styles.publicationItemPhoto} />
@@ -73,42 +96,62 @@ const PostsScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    justifyContent: "flex-end",
+    paddingTop: 160,
   },
-  publications: {
-    paddingTop: 32,
+  formContainer: {
+    alignItems: "center",
+    paddingTop: 92,
     paddingLeft: 16,
     paddingRight: 16,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
-  userInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+  avatarConainer: {
+    position: "absolute",
+    top: -60,
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+  },
+  avatar: {
+    height: "100%",
+    width: "100%",
+    objectFit: "cover",
+    borderRadius: 16,
+  },
+  addBtn: {
+    position: "absolute",
+    bottom: 14,
+    right: -12,
+  },
+  logOutIcon: {
+    position: "absolute",
+    top: 22,
+    right: 16,
+    width: 24,
+    height: 24,
+  },
+  heading: {
     marginBottom: 32,
-  },
-  userPhoto: {
-    width: 60,
-    height: 60,
-    marginRight: 8,
-    borderRadius: 8,
-  },
-  userNameText: {
-    fontFamily: "Roboto700",
-    fontSize: 13,
-    lineHeight: 15,
+    fontFamily: "Roboto500",
+    fontSize: 30,
+    lineHeight: 35,
     color: "#212121",
   },
-  userEmailText: {
-    fontFamily: "Roboto400",
-    fontSize: 11,
-    lineHeight: 13,
-    color: "rgba(33, 33, 33, 0.8)",
+  publications: {
+    paddingLeft: 16,
+    paddingRight: 16,
+    backgroundColor: "#fff",
   },
   publicationItem: {
     marginBottom: 32,
@@ -160,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostsScreen;
+export default ProfileScreen;
