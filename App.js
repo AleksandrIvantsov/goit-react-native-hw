@@ -3,6 +3,8 @@ import { useFonts } from "expo-font";
 import Home from "./Screens/Home";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
+import CommentsScreen from "./Screens/CommentsScreen";
+import MapScreen from "./Screens/MapScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -35,6 +37,16 @@ export default function App() {
         <MainStack.Screen
           name="Home"
           component={Home}
+          options={{ headerShown: false }}
+        />
+        <MainStack.Screen
+          name="Comments"
+          component={CommentsScreen}
+          options={{ headerShown: false }}
+        />
+        <MainStack.Screen
+          name="Map"
+          component={MapScreen}
           options={{ headerShown: false }}
         />
       </MainStack.Navigator>

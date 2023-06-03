@@ -13,42 +13,145 @@ import mapPin from "../assets/mapPin.png";
 import camera from "../assets/camera.png";
 import trash from "../assets/trash.png";
 import contentBlock from "../assets/contentBlock.jpg";
+import { useEffect, useState } from "react";
+import { Camera } from "expo-camera";
+import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
 
 const CreatePostsScreen = () => {
+  const navigation = useNavigation();
+
+  const [userLocation, setUserLocation] = useState(null);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [takenPhoto, setTakenPhoto] = useState(null);
+
+  const [photoTitle, setPhotoTitle] = useState("");
+  const [photoLocation, setPhotoLocation] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.publications}>
         <View style={styles.publicationItem}>
-          <Pressable>
+          {hasPermission ? (
+            takenPhoto ? (
+              <View style={styles.imageThumb}>
+                <Image
+                  source={{ uri: takenPhoto }}
+                  style={styles.publicationItemPhoto}
+                />
+              </View>
+            ) : (
+              <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                <View style={styles.imageThumb}>
+                  <TouchableOpacity
+                    style={styles.cameraIconContainer}
+                    onPress={async () => {
+                      if (cameraRef) {
+                        const { uri } = await cameraRef.takePictureAsync();
+                        setTakenPhoto(uri);
+                      }
+                    }}
+                  >
+                    <Image source={camera} style={styles.cameraIcon} />
+                  </TouchableOpacity>
+                </View>
+              </Camera>
+            )
+          ) : (
             <View style={styles.imageThumb}>
               <Image
                 source={contentBlock}
                 style={styles.publicationItemPhoto}
               />
-              <Image source={camera} style={styles.cameraIcon} />
+              <Text style={styles.cameraDeniedAccessText}>
+                Немає доступу до камери
+              </Text>
             </View>
-          </Pressable>
-          <Text style={styles.publicationPhotoUploadText}>Завантажте фото</Text>
+          )}
+          {takenPhoto ? (
+            <Pressable onPress={() => setTakenPhoto(null)}>
+              <Text style={styles.publicationPhotoUploadText}>
+                Переробити фото
+              </Text>
+            </Pressable>
+          ) : (
+            <Text style={styles.publicationPhotoUploadText}>
+              Зробіть фото натиснувши на іконку фотоапарату
+            </Text>
+          )}
+
           <View>
             <TextInput
               style={styles.input}
               placeholder="Назва..."
               inputMode="text"
+              value={photoTitle}
+              onChangeText={setPhotoTitle}
             />
             <TextInput
               style={styles.input}
               placeholder="Місцевість..."
               inputMode="text"
+              value={photoLocation}
+              onChangeText={setPhotoLocation}
             />
             <Image source={mapPin} style={styles.locationIcon} />
           </View>
-          <TouchableOpacity style={styles.publicationBtn} disabled>
-            <Text style={styles.publicationBtnText}>Опублікувати</Text>
-          </TouchableOpacity>
+          {takenPhoto && photoTitle && photoLocation ? (
+            <TouchableOpacity
+              style={styles.publicationBtn}
+              onPress={async () => {
+                let { status } =
+                  await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                  console.log("Permission to access location was denied");
+                }
+
+                let location = await Location.getCurrentPositionAsync({});
+                const coords = {
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                };
+                setUserLocation(coords);
+                console.log("coords", coords);
+
+                navigation.navigate("Posts");
+
+                setTakenPhoto(null);
+                setPhotoTitle("");
+                setPhotoLocation("");
+              }}
+            >
+              <Text style={styles.publicationBtnText}>Опублікувати</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.publicationBtnDisabled} disabled>
+              <Text style={styles.publicationBtnTextDisabled}>
+                Опублікувати
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
       <View style={styles.bottomMenu}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setTakenPhoto(null);
+            setPhotoTitle("");
+            setPhotoLocation("");
+          }}
+        >
           <Image source={trash} />
         </TouchableOpacity>
       </View>
@@ -57,6 +160,9 @@ const CreatePostsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  camera: {
+    borderRadius: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -82,10 +188,15 @@ const styles = StyleSheet.create({
     objectFit: "cover",
     borderRadius: 8,
   },
-  cameraIcon: {
+  cameraIconContainer: {
     position: "absolute",
+  },
+  cameraIcon: {
     width: 60,
     height: 60,
+  },
+  cameraDeniedAccessText: {
+    position: "absolute",
   },
   publicationPhotoUploadText: {
     fontFamily: "Roboto400",
@@ -123,10 +234,25 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 16,
     marginTop: 16,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+  },
+  publicationBtnDisabled: {
+    alignItems: "center",
+    width: "100%",
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: 16,
     backgroundColor: "#F6F6F6",
     borderRadius: 100,
   },
   publicationBtnText: {
+    fontFamily: "Roboto400",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#fff",
+  },
+  publicationBtnTextDisabled: {
     fontFamily: "Roboto400",
     fontSize: 16,
     lineHeight: 19,

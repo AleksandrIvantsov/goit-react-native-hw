@@ -1,12 +1,22 @@
-import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import mapPin from "../assets/mapPin.png";
 import messageCircle from "../assets/messageCircle.png";
 import userPhoto from "../assets/userPhoto.jpg";
 import photo1 from "../assets/photo1.jpg";
 import photo2 from "../assets/photo2.jpg";
 import photo3 from "../assets/photo3.jpg";
+import { useNavigation } from "@react-navigation/native";
 
 const PostsScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.publications}>
@@ -24,16 +34,33 @@ const PostsScreen = () => {
           </View>
           <Text style={styles.publicationItemTitle}>Ліс</Text>
           <View style={styles.publicationItemInfo}>
-            <View style={styles.publicationItemReactions}>
-              <Image source={messageCircle} />
-              <Text style={styles.publicationItemReactionsText}>0</Text>
-            </View>
-            <View style={styles.publicationItemLocation}>
-              <Image source={mapPin} />
-              <Text style={styles.publicationItemLocationText}>
-                Ivano-Frankivs'k Region, Ukraine
-              </Text>
-            </View>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Comments", {
+                  postId: 1,
+                })
+              }
+            >
+              <View style={styles.publicationItemReactions}>
+                <Image source={messageCircle} />
+                <Text style={styles.publicationItemReactionsText}>0</Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Map", {
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                })
+              }
+            >
+              <View style={styles.publicationItemLocation}>
+                <Image source={mapPin} />
+                <Text style={styles.publicationItemLocationText}>
+                  Ivano-Frankivs'k Region, Ukraine
+                </Text>
+              </View>
+            </Pressable>
           </View>
         </View>
 
@@ -43,14 +70,31 @@ const PostsScreen = () => {
           </View>
           <Text style={styles.publicationItemTitle}>Захід на Чорному морі</Text>
           <View style={styles.publicationItemInfo}>
-            <View style={styles.publicationItemReactions}>
-              <Image source={messageCircle} />
-              <Text style={styles.publicationItemReactionsText}>0</Text>
-            </View>
-            <View style={styles.publicationItemLocation}>
-              <Image source={mapPin} />
-              <Text style={styles.publicationItemLocationText}>Ukraine</Text>
-            </View>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Comments", {
+                  postId: 2,
+                })
+              }
+            >
+              <View style={styles.publicationItemReactions}>
+                <Image source={messageCircle} />
+                <Text style={styles.publicationItemReactionsText}>0</Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Map", {
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                })
+              }
+            >
+              <View style={styles.publicationItemLocation}>
+                <Image source={mapPin} />
+                <Text style={styles.publicationItemLocationText}>Ukraine</Text>
+              </View>
+            </Pressable>
           </View>
         </View>
 
@@ -62,14 +106,31 @@ const PostsScreen = () => {
             Старий будиночок у Венеції
           </Text>
           <View style={styles.publicationItemInfo}>
-            <View style={styles.publicationItemReactions}>
-              <Image source={messageCircle} />
-              <Text style={styles.publicationItemReactionsText}>0</Text>
-            </View>
-            <View style={styles.publicationItemLocation}>
-              <Image source={mapPin} />
-              <Text style={styles.publicationItemLocationText}>Italy</Text>
-            </View>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Comments", {
+                  postId: 3,
+                })
+              }
+            >
+              <View style={styles.publicationItemReactions}>
+                <Image source={messageCircle} />
+                <Text style={styles.publicationItemReactionsText}>0</Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Map", {
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                })
+              }
+            >
+              <View style={styles.publicationItemLocation}>
+                <Image source={mapPin} />
+                <Text style={styles.publicationItemLocationText}>Italy</Text>
+              </View>
+            </Pressable>
           </View>
         </View>
       </ScrollView>

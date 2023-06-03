@@ -26,7 +26,10 @@ const CommentsScreen = () => {
       <StatusBar style="auto" />
       <View style={styles.header}>
         <Text style={styles.headerText}>Коментарі</Text>
-        <Pressable style={styles.arrowLeftIcon}>
+        <Pressable
+          style={styles.arrowLeftIcon}
+          onPress={() => navigation.goBack()}
+        >
           <Image source={arrowLeft} />
         </Pressable>
       </View>
