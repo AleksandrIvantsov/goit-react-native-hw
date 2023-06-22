@@ -18,9 +18,15 @@ import photo2 from "../assets/photo2.jpg";
 import photo3 from "../assets/photo3.jpg";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../redux/selectors";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/operations";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const userInfo = useSelector(getUserInfo);
+  const dispatch = useDispatch();
 
   return (
     <ImageBackground
@@ -34,13 +40,10 @@ const ProfileScreen = () => {
           <Image style={styles.avatar} source={userPhoto} />
           <Image style={styles.addBtn} source={removeBtn} />
         </View>
-        <Pressable
-          style={styles.logOutIcon}
-          onPress={() => navigation.navigate("Login")}
-        >
+        <Pressable style={styles.logOutIcon} onPress={() => dispatch(logout())}>
           <Image source={logOut} />
         </Pressable>
-        <Text style={styles.heading}>Natali Romanova</Text>
+        <Text style={styles.heading}>{userInfo.name}</Text>
       </View>
       <ScrollView style={styles.publications}>
         <View style={styles.publicationItem}>

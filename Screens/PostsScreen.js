@@ -13,9 +13,12 @@ import photo1 from "../assets/photo1.jpg";
 import photo2 from "../assets/photo2.jpg";
 import photo3 from "../assets/photo3.jpg";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "../redux/selectors";
 
 const PostsScreen = () => {
   const navigation = useNavigation();
+  const userInfo = useSelector(getUserInfo);
 
   return (
     <View style={styles.container}>
@@ -23,8 +26,8 @@ const PostsScreen = () => {
         <View style={styles.userInfo}>
           <Image source={userPhoto} style={styles.userPhoto} />
           <View>
-            <Text style={styles.userNameText}>Natali Romanova</Text>
-            <Text style={styles.userEmailText}>email@example.com</Text>
+            <Text style={styles.userNameText}>{userInfo.name}</Text>
+            <Text style={styles.userEmailText}>{userInfo.email}</Text>
           </View>
         </View>
 

@@ -11,29 +11,51 @@ import {
   TouchableOpacity,
 } from "react-native";
 import bgImage from "../assets/bg.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getIsLoggedIn } from "../redux/selectors";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../config";
+import { logIn, monitorAuthState } from "../redux/operations";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(getIsLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.navigate("Home");
+    } else {
+      navigation.navigate("Login");
+    }
+  }, [isLoggedIn]);
 
   const [isInputEmailActive, setIsInputEmailActive] = useState(false);
   const [isInputPassActive, setIsInputPassActive] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [password, setPassword] = useState("");
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   const handleSubmit = () => {
-    console.log("email:", email);
-    console.log("password:", pass);
+    dispatch(
+      logIn({
+        email,
+        password,
+      })
+    );
 
     setEmail("");
-    setPass("");
-
-    navigation.navigate("Home");
+    setPassword("");
   };
 
   const toggleSecureTextEntry = () => {
@@ -68,8 +90,8 @@ const LoginScreen = () => {
               onFocus={() => setIsInputPassActive(true)}
               onBlur={() => setIsInputPassActive(false)}
               placeholder="Пароль"
-              value={pass}
-              onChangeText={setPass}
+              value={password}
+              onChangeText={setPassword}
               secureTextEntry={secureTextEntry}
             />
             <View style={styles.showBtnContainer}>

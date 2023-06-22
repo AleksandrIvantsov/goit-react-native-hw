@@ -15,6 +15,8 @@ import grid from "../assets/grid.png";
 import user from "../assets/user.png";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/operations";
 
 function MyTabBar({ state, navigation }) {
   if (state.index === 1) {
@@ -42,6 +44,7 @@ const Tab = createBottomTabNavigator();
 
 const Home = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   return (
     <Tab.Navigator
@@ -67,7 +70,7 @@ const Home = () => {
           headerRight: () => (
             <Pressable
               style={styles.logOutIcon}
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => dispatch(logout())}
             >
               <Image source={logOut} />
             </Pressable>

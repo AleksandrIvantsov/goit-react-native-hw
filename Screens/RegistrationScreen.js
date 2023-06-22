@@ -16,9 +16,12 @@ import addBtn from "../assets/add.png";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { monitorAuthState, register } from "../redux/operations";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [isInputLoginActive, setIsInputLoginActive] = useState(false);
   const [isInputEmailActive, setIsInputEmailActive] = useState(false);
@@ -26,20 +29,22 @@ const RegistrationScreen = () => {
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [password, setPassword] = useState("");
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   const handleSubmit = () => {
-    console.log("login:", login);
-    console.log("email:", email);
-    console.log("password:", pass);
+    dispatch(
+      register({
+        userName: { displayName: login },
+        email,
+        password,
+      })
+    );
 
     setLogin("");
     setEmail("");
-    setPass("");
-
-    navigation.navigate("Home");
+    setPassword("");
   };
 
   const toggleSecureTextEntry = () => {
@@ -86,8 +91,8 @@ const RegistrationScreen = () => {
               onFocus={() => setIsInputPassActive(true)}
               onBlur={() => setIsInputPassActive(false)}
               placeholder="Пароль"
-              value={pass}
-              onChangeText={setPass}
+              value={password}
+              onChangeText={setPassword}
               secureTextEntry={secureTextEntry}
             />
             <View style={styles.showBtnContainer}>
