@@ -17,11 +17,13 @@ import { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
+import { addPost } from "../redux/operations";
+import { useDispatch } from "react-redux";
+import { ActivityIndicator } from "react-native";
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
-
-  const [userLocation, setUserLocation] = useState(null);
+  const dispatch = useDispatch();
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
@@ -31,13 +33,84 @@ const CreatePostsScreen = () => {
   const [photoTitle, setPhotoTitle] = useState("");
   const [photoLocation, setPhotoLocation] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-
       setHasPermission(status === "granted");
+      console.log("cameraStatus", status);
     })();
   }, []);
+
+  // const sendDispatch = (coords) => {
+  //   dispatch(
+  //     addPost({
+  //       photoTitle,
+  //       photoLocation,
+  //       userLocation: coords,
+  //       takenPhoto,
+  //     })
+  //   );
+
+  //   setTakenPhoto(null);
+  //   setPhotoTitle("");
+  //   setPhotoLocation("");
+  // };
+
+  // const handleSubmit = () => {
+  //   (async (callback) => {
+  //     const { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       console.log("Permission to access location was denied");
+  //     }
+
+  //     const location = await Location.getCurrentPositionAsync();
+  //     const coords = {
+  //       latitude: location.coords.latitude,
+  //       longitude: location.coords.longitude,
+  //     };
+
+  //     setUserLocation(coords);
+  //     console.log("geoStatus", status);
+
+  //     callback(coords);
+  //   })(sendDispatch);
+
+  //   // navigation.navigate("Posts");
+  // };
+
+  const handleSubmit = () => {
+    (async () => {
+      setIsLoading(true);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      const location = await Location.getCurrentPositionAsync();
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+
+      dispatch(
+        addPost({
+          photoTitle,
+          photoLocation,
+          userLocation: coords,
+          takenPhoto,
+        })
+      );
+
+      setTakenPhoto(null);
+      setPhotoTitle("");
+      setPhotoLocation("");
+      setIsLoading(false);
+
+      navigation.navigate("Posts");
+    })();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -108,30 +181,16 @@ const CreatePostsScreen = () => {
             />
             <Image source={mapPin} style={styles.locationIcon} />
           </View>
-          {takenPhoto && photoTitle && photoLocation ? (
+          {isLoading ? (
+            <ActivityIndicator
+              style={styles.activityIndicator}
+              size="large"
+              color="#FF6C00"
+            />
+          ) : takenPhoto && photoTitle && photoLocation ? (
             <TouchableOpacity
               style={styles.publicationBtn}
-              onPress={async () => {
-                let { status } =
-                  await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                  console.log("Permission to access location was denied");
-                }
-
-                let location = await Location.getCurrentPositionAsync({});
-                const coords = {
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                };
-                setUserLocation(coords);
-                console.log("coords", coords);
-
-                navigation.navigate("Posts");
-
-                setTakenPhoto(null);
-                setPhotoTitle("");
-                setPhotoLocation("");
-              }}
+              onPress={handleSubmit}
             >
               <Text style={styles.publicationBtnText}>Опублікувати</Text>
             </TouchableOpacity>
@@ -257,6 +316,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
+  },
+  activityIndicator: {
+    marginTop: 16,
   },
 });
 

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addPost, fetchPosts, updatePost } from "./operations";
 
 const initialState = {
   items: [],
@@ -10,34 +11,53 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   extraReducers: (builder) => {
-    // builder
-    //   .addCase(fetchContacts.pending, (state) => {
-    //     state.isLoading = true;
-    //   })
-    //   .addCase(fetchContacts.fulfilled, (state, action) => {
-    //     state.isLoading = false;
-    //     state.error = null;
-    //     state.items = action.payload;
-    //   })
-    //   .addCase(fetchContacts.rejected, (state, action) => {
-    //     state.isLoading = false;
-    //     state.error = action.payload;
-    //     toast.error(`Something went wrong. Error message: ${state.error}`);
-    //   })
-    //   .addCase(addContact.pending, (state) => {
-    //     state.isAdding = true;
-    //   })
-    //   .addCase(addContact.fulfilled, (state, action) => {
-    //     state.isAdding = false;
-    //     state.error = null;
-    //     state.items.push(action.payload);
-    //     toast.success("Contact successfully added!");
-    //   })
-    //   .addCase(addContact.rejected, (state, action) => {
-    //     state.isAdding = false;
-    //     state.error = action.payload;
-    //     toast.error(`Something went wrong. Error message: ${state.error}`);
-    //   })
+    builder
+      .addCase(addPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items.unshift(action.payload);
+        console.log("action.payload", action.payload);
+        console.log("state", state);
+      })
+      .addCase(addPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(updatePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = state.items.map((post) => {
+          if (post.id === action.payload.postId) {
+            post.comments.unshift(action.payload.comment);
+          }
+          return post;
+        });
+
+        console.log("action.payload", action.payload);
+        console.log("state", state);
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = action.payload;
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
     //   .addCase(deleteContact.pending, (state) => {
     //     state.isDeleting = true;
     //   })

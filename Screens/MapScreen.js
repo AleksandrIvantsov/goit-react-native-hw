@@ -9,12 +9,15 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import arrowLeft from "../assets/arrowLeft.png";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 
 const MapScreen = () => {
   const navigation = useNavigation();
+  const {
+    params: { photoLocation, photoTitle, markerCoords },
+  } = useRoute();
 
   const [userLocation, setUserLocation] = useState(null);
 
@@ -50,12 +53,9 @@ const MapScreen = () => {
           mapType="standard"
         >
           <Marker
-            title="Ліс"
-            coordinate={{
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
-            }}
-            description="Київ"
+            title={photoTitle}
+            coordinate={markerCoords}
+            description={photoLocation}
           />
         </MapView>
       )}

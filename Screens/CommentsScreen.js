@@ -16,10 +16,38 @@ import ellipse from "../assets/ellipse.png";
 import arrowTop from "../assets/arrowTop.png";
 import photo2 from "../assets/photo2.jpg";
 import userPhoto from "../assets/userPhoto.jpg";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePost } from "../redux/operations";
+import { getPosts } from "../redux/selectors";
+
+const getPostComments = (posts, postId) => {
+  const currentPost = posts.filter((post) => post.id === postId);
+
+  return currentPost[0].comments;
+};
 
 const CommentsScreen = () => {
+  const posts = useSelector(getPosts);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const {
+    params: { postId, photoUrl },
+  } = useRoute();
+
+  const [commentText, setCommentText] = useState("");
+
+  const handleSubmit = () => {
+    dispatch(
+      updatePost({
+        id: postId,
+        text: commentText,
+      })
+    );
+
+    setCommentText("");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -36,33 +64,38 @@ const CommentsScreen = () => {
       <ScrollView style={styles.publications}>
         <View style={styles.publicationItem}>
           <View style={styles.imageThumb}>
-            <Image source={photo2} style={styles.publicationItemPhoto} />
+            <Image
+              source={{ uri: photoUrl }}
+              style={styles.publicationItemPhoto}
+            />
           </View>
         </View>
+        {getPostComments(posts, postId).map((comment) => (
+          <View
+            key={comment.id}
+            style={
+              false ? styles.commentContainerReversed : styles.commentContainer
+            }
+          >
+            <View style={styles.avatarContainer}>
+              <Image
+                source={false ? userPhoto : ellipse}
+                style={styles.avatar}
+              />
+            </View>
+            <View style={styles.comment}>
+              <Text style={styles.commentText}>{comment.text}</Text>
 
-        <View
-          style={
-            false ? styles.commentContainerReversed : styles.commentContainer
-          }
-        >
-          <View style={styles.avatarContainer}>
-            <Image source={false ? userPhoto : ellipse} style={styles.avatar} />
+              <Text
+                style={false ? styles.commentDateReversed : styles.commentDate}
+              >
+                {comment.createdAt}
+              </Text>
+            </View>
           </View>
-          <View style={styles.comment}>
-            <Text style={styles.commentText}>
-              Really love your most recent photo. I’ve been trying to capture
-              the same thing for a few months and would love some tips!
-            </Text>
+        ))}
 
-            <Text
-              style={false ? styles.commentDateReversed : styles.commentDate}
-            >
-              09 червня, 2020 | 08:40
-            </Text>
-          </View>
-        </View>
-
-        <View
+        {/* <View
           style={
             true ? styles.commentContainerReversed : styles.commentContainer
           }
@@ -103,7 +136,7 @@ const CommentsScreen = () => {
               09 червня, 2020 | 09:20
             </Text>
           </View>
-        </View>
+        </View> */}
       </ScrollView>
       <KeyboardAvoidingView
         style={styles.bottomMenu}
@@ -113,8 +146,10 @@ const CommentsScreen = () => {
           style={styles.input}
           placeholder="Коментувати..."
           inputMode="text"
+          value={commentText}
+          onChangeText={setCommentText}
         />
-        <TouchableOpacity style={styles.commentBtn}>
+        <TouchableOpacity style={styles.commentBtn} onPress={handleSubmit}>
           <Image source={arrowTop} />
         </TouchableOpacity>
       </KeyboardAvoidingView>

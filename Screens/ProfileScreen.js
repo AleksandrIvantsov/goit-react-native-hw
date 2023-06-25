@@ -19,14 +19,16 @@ import photo3 from "../assets/photo3.jpg";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { getUserInfo } from "../redux/selectors";
+import { getState, getUserInfo } from "../redux/selectors";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/operations";
+import { fetchPosts, logout } from "../redux/operations";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const userInfo = useSelector(getUserInfo);
   const dispatch = useDispatch();
+
+  const state = useSelector(getState);
 
   return (
     <ImageBackground
@@ -44,6 +46,18 @@ const ProfileScreen = () => {
           <Image source={logOut} />
         </Pressable>
         <Text style={styles.heading}>{userInfo.name}</Text>
+        <Pressable onPress={() => console.log("state", state)}>
+          <View style={styles.publicationItemLocation}>
+            <Image source={mapPin} />
+            <Text style={styles.publicationItemLocationText}>Show State</Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={() => dispatch(fetchPosts())}>
+          <View style={styles.publicationItemLocation}>
+            <Image source={mapPin} />
+            <Text style={styles.publicationItemLocationText}>Fetch Posts</Text>
+          </View>
+        </Pressable>
       </View>
       <ScrollView style={styles.publications}>
         <View style={styles.publicationItem}>
@@ -244,7 +258,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto400",
     fontSize: 16,
     lineHeight: 19,
-    color: "#BDBDBD",
+    color: "#212121",
     marginLeft: 6,
   },
   publicationItemLocationText: {
