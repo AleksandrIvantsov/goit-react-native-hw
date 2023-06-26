@@ -16,12 +16,16 @@ import addBtn from "../assets/add.png";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { monitorAuthState, register } from "../redux/operations";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/operations";
+import { getAuthError, getIsRefreshing } from "../redux/selectors";
+import { ActivityIndicator } from "react-native";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const isRefreshing = useSelector(getIsRefreshing);
+  const error = useSelector(getAuthError);
 
   const [isInputLoginActive, setIsInputLoginActive] = useState(false);
   const [isInputEmailActive, setIsInputEmailActive] = useState(false);
@@ -102,11 +106,25 @@ const RegistrationScreen = () => {
                 </Text>
               </Pressable>
             </View>
+            {error && (
+              <View style={styles.errorMessage}>
+                <Text style={styles.errorMessageText}>Помилка: {error}</Text>
+              </View>
+            )}
           </KeyboardAvoidingView>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Зареєструватися</Text>
-            </TouchableOpacity>
+            {isRefreshing ? (
+              <ActivityIndicator
+                style={styles.activityIndicator}
+                size="large"
+                color="#FF6C00"
+              />
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Зареєструватися</Text>
+              </TouchableOpacity>
+            )}
+
             <Pressable
               style={styles.auth}
               onPress={() => navigation.navigate("Login")}
@@ -224,6 +242,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
+  },
+  activityIndicator: {
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  errorMessage: {
+    width: "100%",
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 16,
+    paddingLeft: 16,
+    borderWidth: 1,
+    borderColor: "#ff0000",
+    borderRadius: 8,
+  },
+  errorMessageText: {
+    fontFamily: "Roboto400",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#ff0000",
   },
 });
 

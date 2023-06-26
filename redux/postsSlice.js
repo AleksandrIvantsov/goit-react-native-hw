@@ -19,8 +19,6 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.items.unshift(action.payload);
-        console.log("action.payload", action.payload);
-        console.log("state", state);
       })
       .addCase(addPost.rejected, (state, action) => {
         state.isLoading = false;
@@ -38,9 +36,6 @@ const postsSlice = createSlice({
           }
           return post;
         });
-
-        console.log("action.payload", action.payload);
-        console.log("state", state);
       })
       .addCase(updatePost.rejected, (state, action) => {
         state.isLoading = false;
@@ -58,23 +53,6 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       });
-    //   .addCase(deleteContact.pending, (state) => {
-    //     state.isDeleting = true;
-    //   })
-    //   .addCase(deleteContact.fulfilled, (state, action) => {
-    //     state.isDeleting = false;
-    //     state.error = null;
-    //     const index = state.items.findIndex(
-    //       (contact) => contact.id === action.payload.id
-    //     );
-    //     state.items.splice(index, 1);
-    //     toast.success("Contact successfully deleted!");
-    //   })
-    //   .addCase(deleteContact.rejected, (state, action) => {
-    //     state.isDeleting = false;
-    //     state.error = action.payload;
-    //     toast.error(`Something went wrong. Error message: ${state.error}`);
-    //   });
   },
 });
 

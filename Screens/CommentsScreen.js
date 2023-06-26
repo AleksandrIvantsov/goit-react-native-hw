@@ -14,7 +14,6 @@ import {
 import arrowLeft from "../assets/arrowLeft.png";
 import ellipse from "../assets/ellipse.png";
 import arrowTop from "../assets/arrowTop.png";
-import photo2 from "../assets/photo2.jpg";
 import userPhoto from "../assets/userPhoto.jpg";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
@@ -94,49 +93,6 @@ const CommentsScreen = () => {
             </View>
           </View>
         ))}
-
-        {/* <View
-          style={
-            true ? styles.commentContainerReversed : styles.commentContainer
-          }
-        >
-          <View style={styles.avatarContainer}>
-            <Image source={true ? userPhoto : ellipse} style={styles.avatar} />
-          </View>
-          <View style={styles.comment}>
-            <Text style={styles.commentText}>
-              A fast 50mm like f1.8 would help with the bokeh. I’ve been using
-              primes as they tend to get a bit sharper images.
-            </Text>
-
-            <Text
-              style={true ? styles.commentDateReversed : styles.commentDate}
-            >
-              09 червня, 2020 | 09:14
-            </Text>
-          </View>
-        </View>
-
-        <View
-          style={
-            false ? styles.commentContainerReversed : styles.commentContainer
-          }
-        >
-          <View style={styles.avatarContainer}>
-            <Image source={false ? userPhoto : ellipse} style={styles.avatar} />
-          </View>
-          <View style={styles.comment}>
-            <Text style={styles.commentText}>
-              Thank you! That was very helpful!
-            </Text>
-
-            <Text
-              style={false ? styles.commentDateReversed : styles.commentDate}
-            >
-              09 червня, 2020 | 09:20
-            </Text>
-          </View>
-        </View> */}
       </ScrollView>
       <KeyboardAvoidingView
         style={styles.bottomMenu}

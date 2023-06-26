@@ -15,20 +15,17 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getIsLoggedIn } from "../redux/selectors";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../config";
-import { logIn, monitorAuthState } from "../redux/operations";
+import { getAuthError, getIsLoggedIn } from "../redux/selectors";
+import { logIn } from "../redux/operations";
+import { getIsRefreshing } from "../redux/selectors";
+import { ActivityIndicator } from "react-native";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn);
+  const isRefreshing = useSelector(getIsRefreshing);
+  const error = useSelector(getAuthError);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -53,7 +50,6 @@ const LoginScreen = () => {
         password,
       })
     );
-
     setEmail("");
     setPassword("");
   };
@@ -101,11 +97,26 @@ const LoginScreen = () => {
                 </Text>
               </Pressable>
             </View>
+            {error && (
+              <View style={styles.errorMessage}>
+                <Text style={styles.errorMessageText}>
+                  Неправильний email або пароль. Спробуйте ще раз.
+                </Text>
+              </View>
+            )}
           </KeyboardAvoidingView>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Увійти</Text>
-            </TouchableOpacity>
+            {isRefreshing ? (
+              <ActivityIndicator
+                style={styles.activityIndicator}
+                size="large"
+                color="#FF6C00"
+              />
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Увійти</Text>
+              </TouchableOpacity>
+            )}
             <Pressable
               style={styles.auth}
               onPress={() => navigation.navigate("Registration")}
@@ -225,6 +236,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
+  },
+  activityIndicator: {
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  errorMessage: {
+    width: "100%",
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 16,
+    paddingLeft: 16,
+    borderWidth: 1,
+    borderColor: "#ff0000",
+    borderRadius: 8,
+  },
+  errorMessageText: {
+    fontFamily: "Roboto400",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#ff0000",
   },
 });
 

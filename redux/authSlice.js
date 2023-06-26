@@ -14,15 +14,21 @@ const authSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
+      .addCase(register.pending, (state) => {
+        state.isRefreshing = true;
+        state.error = null;
+      })
       .addCase(register.fulfilled, (state, action) => {
         state.user.uid = action.payload.localId;
         state.user.email = action.payload.email;
         state.token = action.payload.idToken;
         state.isLoggedIn = true;
+        state.isRefreshing = false;
         state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
         state.error = action.payload;
+        state.isRefreshing = false;
       })
       .addCase(updateUserName.fulfilled, (state, action) => {
         state.user.name = action.payload;
@@ -31,16 +37,21 @@ const authSlice = createSlice({
       .addCase(updateUserName.rejected, (state, action) => {
         state.error = action.payload;
       })
+      .addCase(logIn.pending, (state) => {
+        state.isRefreshing = true;
+      })
       .addCase(logIn.fulfilled, (state, action) => {
         state.user.uid = action.payload.localId;
         state.user.name = action.payload.displayName;
         state.user.email = action.payload.email;
         state.token = action.payload.idToken;
         state.isLoggedIn = true;
+        state.isRefreshing = false;
         state.error = null;
       })
       .addCase(logIn.rejected, (state, action) => {
         state.error = action.payload;
+        state.isRefreshing = false;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.user.uid = null;
@@ -53,41 +64,6 @@ const authSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.error = action.payload;
       });
-    // .addCase(logIn.fulfilled, (state, action) => {
-    //   state.user = action.payload.user;
-    //   state.token = action.payload.token;
-    //   state.isLoggedIn = true;
-    //   state.error = null;
-    //   // toast.success("Login successfull!");
-    // })
-    // .addCase(logIn.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   // toast.error(`Something went wrong. Error message: ${state.error}`);
-    // })
-    // .addCase(logOut.fulfilled, (state, action) => {
-    //   state.user = { name: null, email: null };
-    //   state.token = null;
-    //   state.isLoggedIn = false;
-    //   state.error = null;
-    //   // toast.success("Logout successfull!");
-    // })
-    // .addCase(logOut.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   // toast.error(`Something went wrong. Error message: ${state.error}`);
-    // })
-    // .addCase(fetchCurrentUser.pending, (state, action) => {
-    //   state.isRefreshing = true;
-    // })
-    // .addCase(fetchCurrentUser.fulfilled, (state, action) => {
-    //   state.user = action.payload;
-    //   state.isLoggedIn = true;
-    //   state.isRefreshing = false;
-    //   state.error = null;
-    // })
-    // .addCase(fetchCurrentUser.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   state.isRefreshing = false;
-    // });
   },
 });
 

@@ -39,46 +39,8 @@ const CreatePostsScreen = () => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
-      console.log("cameraStatus", status);
     })();
   }, []);
-
-  // const sendDispatch = (coords) => {
-  //   dispatch(
-  //     addPost({
-  //       photoTitle,
-  //       photoLocation,
-  //       userLocation: coords,
-  //       takenPhoto,
-  //     })
-  //   );
-
-  //   setTakenPhoto(null);
-  //   setPhotoTitle("");
-  //   setPhotoLocation("");
-  // };
-
-  // const handleSubmit = () => {
-  //   (async (callback) => {
-  //     const { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //     }
-
-  //     const location = await Location.getCurrentPositionAsync();
-  //     const coords = {
-  //       latitude: location.coords.latitude,
-  //       longitude: location.coords.longitude,
-  //     };
-
-  //     setUserLocation(coords);
-  //     console.log("geoStatus", status);
-
-  //     callback(coords);
-  //   })(sendDispatch);
-
-  //   // navigation.navigate("Posts");
-  // };
 
   const handleSubmit = () => {
     (async () => {

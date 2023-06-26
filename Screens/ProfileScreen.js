@@ -12,23 +12,22 @@ import bgImage from "../assets/bg.png";
 import removeBtn from "../assets/remove.png";
 import mapPin from "../assets/mapPin.png";
 import messageCircle from "../assets/messageCircle.png";
+import messageCircleOrange from "../assets/messageCircleOrange.png";
 import userPhoto from "../assets/userPhoto.jpg";
-import photo1 from "../assets/photo1.jpg";
-import photo2 from "../assets/photo2.jpg";
-import photo3 from "../assets/photo3.jpg";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { getState, getUserInfo } from "../redux/selectors";
+import { getIsloading, getPosts, getUserInfo } from "../redux/selectors";
 import { useDispatch } from "react-redux";
-import { fetchPosts, logout } from "../redux/operations";
+import { logout } from "../redux/operations";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const userInfo = useSelector(getUserInfo);
   const dispatch = useDispatch();
 
-  const state = useSelector(getState);
+  const posts = useSelector(getPosts);
+  const isLoading = useSelector(getIsloading);
 
   return (
     <ImageBackground
@@ -46,123 +45,69 @@ const ProfileScreen = () => {
           <Image source={logOut} />
         </Pressable>
         <Text style={styles.heading}>{userInfo.name}</Text>
-        <Pressable onPress={() => console.log("state", state)}>
-          <View style={styles.publicationItemLocation}>
-            <Image source={mapPin} />
-            <Text style={styles.publicationItemLocationText}>Show State</Text>
-          </View>
-        </Pressable>
-        <Pressable onPress={() => dispatch(fetchPosts())}>
-          <View style={styles.publicationItemLocation}>
-            <Image source={mapPin} />
-            <Text style={styles.publicationItemLocationText}>Fetch Posts</Text>
-          </View>
-        </Pressable>
       </View>
       <ScrollView style={styles.publications}>
-        <View style={styles.publicationItem}>
-          <View style={styles.imageThumb}>
-            <Image source={photo1} style={styles.publicationItemPhoto} />
-          </View>
-          <Text style={styles.publicationItemTitle}>Ліс</Text>
-          <View style={styles.publicationItemInfo}>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Comments", {
-                  postId: 1,
-                })
-              }
-            >
-              <View style={styles.publicationItemReactions}>
-                <Image source={messageCircle} />
-                <Text style={styles.publicationItemReactionsText}>0</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#FF6C00" />
+        ) : (
+          posts.map(
+            ({
+              id,
+              photoTitle,
+              photoLocation,
+              userLocation,
+              photoUrl,
+              comments,
+            }) => (
+              <View key={id} style={styles.publicationItem}>
+                <View style={styles.imageThumb}>
+                  <Image
+                    source={{ uri: photoUrl }}
+                    style={styles.publicationItemPhoto}
+                  />
+                </View>
+                <Text style={styles.publicationItemTitle}>{photoTitle}</Text>
+                <View style={styles.publicationItemInfo}>
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate("Comments", {
+                        postId: id,
+                        photoUrl,
+                      })
+                    }
+                  >
+                    <View style={styles.publicationItemReactions}>
+                      <Image
+                        source={
+                          comments.length ? messageCircleOrange : messageCircle
+                        }
+                      />
+                      <Text style={styles.publicationItemReactionsText}>
+                        {comments.length}
+                      </Text>
+                    </View>
+                  </Pressable>
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate("Map", {
+                        photoTitle,
+                        photoLocation,
+                        markerCoords: userLocation,
+                      })
+                    }
+                  >
+                    <View style={styles.publicationItemLocation}>
+                      <Image source={mapPin} />
+                      <Text style={styles.publicationItemLocationText}>
+                        {photoLocation}
+                      </Text>
+                    </View>
+                  </Pressable>
+                </View>
               </View>
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Map", {
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                })
-              }
-            >
-              <View style={styles.publicationItemLocation}>
-                <Image source={mapPin} />
-                <Text style={styles.publicationItemLocationText}>
-                  Ivano-Frankivs'k Region, Ukraine
-                </Text>
-              </View>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.publicationItem}>
-          <View style={styles.imageThumb}>
-            <Image source={photo2} style={styles.publicationItemPhoto} />
-          </View>
-          <Text style={styles.publicationItemTitle}>Захід на Чорному морі</Text>
-          <View style={styles.publicationItemInfo}>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Comments", {
-                  postId: 2,
-                })
-              }
-            >
-              <View style={styles.publicationItemReactions}>
-                <Image source={messageCircle} />
-                <Text style={styles.publicationItemReactionsText}>0</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Map", {
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                })
-              }
-            >
-              <View style={styles.publicationItemLocation}>
-                <Image source={mapPin} />
-                <Text style={styles.publicationItemLocationText}>Ukraine</Text>
-              </View>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.publicationItem}>
-          <View style={styles.imageThumb}>
-            <Image source={photo3} style={styles.publicationItemPhoto} />
-          </View>
-          <Text style={styles.publicationItemTitle}>
-            Старий будиночок у Венеції
-          </Text>
-          <View style={styles.publicationItemInfo}>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Comments", {
-                  postId: 3,
-                })
-              }
-            >
-              <View style={styles.publicationItemReactions}>
-                <Image source={messageCircle} />
-                <Text style={styles.publicationItemReactionsText}>0</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("Map", {
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                })
-              }
-            >
-              <View style={styles.publicationItemLocation}>
-                <Image source={mapPin} />
-                <Text style={styles.publicationItemLocationText}>Italy</Text>
-              </View>
-            </Pressable>
-          </View>
-        </View>
+            )
+          )
+        )}
       </ScrollView>
     </ImageBackground>
   );

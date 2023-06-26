@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   updateProfile,
   signOut,
 } from "firebase/auth";
@@ -14,7 +13,6 @@ import {
   getDocs,
   updateDoc,
   arrayUnion,
-  increment,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -27,7 +25,6 @@ export const register = createAsyncThunk(
         email,
         password
       );
-      console.log("response", response);
 
       const user = response.user;
       const update = { user, userName };
