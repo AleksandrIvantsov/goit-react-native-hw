@@ -12,20 +12,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import bgImage from "../assets/bg.png";
-import addBtn from "../assets/add.png";
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/operations";
-import { getAuthError, getIsRefreshing } from "../redux/selectors";
+import { getIsRefreshing, getRegisterError } from "../redux/selectors";
 import { ActivityIndicator } from "react-native";
+import { Add } from "../icons/SvgIcons";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const isRefreshing = useSelector(getIsRefreshing);
-  const error = useSelector(getAuthError);
+  const registerError = useSelector(getRegisterError);
 
   const [isInputLoginActive, setIsInputLoginActive] = useState(false);
   const [isInputEmailActive, setIsInputEmailActive] = useState(false);
@@ -69,7 +69,7 @@ const RegistrationScreen = () => {
             behavior={"padding"}
           >
             <View style={styles.avatar}>
-              <Image style={styles.addBtn} source={addBtn} />
+              <Add style={styles.addBtn} />
             </View>
             <Text style={styles.heading}>Реєстрація</Text>
             <TextInput
@@ -106,9 +106,11 @@ const RegistrationScreen = () => {
                 </Text>
               </Pressable>
             </View>
-            {error && (
+            {registerError && (
               <View style={styles.errorMessage}>
-                <Text style={styles.errorMessageText}>Помилка: {error}</Text>
+                <Text style={styles.errorMessageText}>
+                  Помилка: {registerError}
+                </Text>
               </View>
             )}
           </KeyboardAvoidingView>

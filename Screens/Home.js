@@ -1,5 +1,4 @@
 import {
-  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -9,14 +8,11 @@ import {
 import ProfileScreen from "./ProfileScreen";
 import PostsScreen from "./PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
-import logOut from "../assets/logOut.png";
-import arrowLeft from "../assets/arrowLeft.png";
-import grid from "../assets/grid.png";
-import user from "../assets/user.png";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/operations";
+import { ArrowLeft, Grid, LogOut, User } from "../icons/SvgIcons";
 
 function MyTabBar({ state, navigation }) {
   if (state.index === 1) {
@@ -25,7 +21,7 @@ function MyTabBar({ state, navigation }) {
   return (
     <SafeAreaView style={styles.bottomMenu}>
       <Pressable onPress={() => navigation.navigate("Posts")}>
-        <Image source={grid} />
+        <Grid />
       </Pressable>
       <TouchableOpacity
         style={styles.button}
@@ -34,7 +30,7 @@ function MyTabBar({ state, navigation }) {
         <Text style={styles.buttonText}>+</Text>
       </TouchableOpacity>
       <Pressable onPress={() => navigation.navigate("Profile")}>
-        <Image source={user} />
+        <User />
       </Pressable>
     </SafeAreaView>
   );
@@ -72,7 +68,7 @@ const Home = () => {
               style={styles.logOutIcon}
               onPress={() => dispatch(logout())}
             >
-              <Image source={logOut} />
+              <LogOut />
             </Pressable>
           ),
         }}
@@ -98,7 +94,7 @@ const Home = () => {
               style={styles.arrowLeftIcon}
               onPress={() => navigation.navigate("Posts")}
             >
-              <Image source={arrowLeft} />
+              <ArrowLeft />
             </Pressable>
           ),
         }}

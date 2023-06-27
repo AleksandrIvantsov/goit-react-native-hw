@@ -8,7 +8,7 @@ import {
   Text,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import arrowLeft from "../assets/arrowLeft.png";
+import { ArrowLeft } from "../icons/SvgIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
@@ -62,7 +62,7 @@ const MapScreen = () => {
 
       <SafeAreaView style={styles.goBackBtnContainer}>
         <Pressable style={styles.goBackBtn} onPress={() => navigation.goBack()}>
-          <Image source={arrowLeft} />
+          <ArrowLeft />
         </Pressable>
       </SafeAreaView>
     </View>

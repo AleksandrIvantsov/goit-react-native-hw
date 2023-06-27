@@ -7,12 +7,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import logOut from "../assets/logOut.png";
 import bgImage from "../assets/bg.png";
-import removeBtn from "../assets/remove.png";
-import mapPin from "../assets/mapPin.png";
-import messageCircle from "../assets/messageCircle.png";
-import messageCircleOrange from "../assets/messageCircleOrange.png";
 import userPhoto from "../assets/userPhoto.jpg";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +15,13 @@ import { useSelector } from "react-redux";
 import { getIsloading, getPosts, getUserInfo } from "../redux/selectors";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/operations";
+import {
+  LogOut,
+  MapPin,
+  MessageCircle,
+  MessageCircleOrange,
+  RemoveBtn,
+} from "../icons/SvgIcons";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -39,10 +41,10 @@ const ProfileScreen = () => {
       <View style={styles.formContainer}>
         <View style={styles.avatarConainer}>
           <Image style={styles.avatar} source={userPhoto} />
-          <Image style={styles.addBtn} source={removeBtn} />
+          <RemoveBtn style={styles.addBtn} />
         </View>
         <Pressable style={styles.logOutIcon} onPress={() => dispatch(logout())}>
-          <Image source={logOut} />
+          <LogOut />
         </Pressable>
         <Text style={styles.heading}>{userInfo.name}</Text>
       </View>
@@ -77,11 +79,11 @@ const ProfileScreen = () => {
                     }
                   >
                     <View style={styles.publicationItemReactions}>
-                      <Image
-                        source={
-                          comments.length ? messageCircleOrange : messageCircle
-                        }
-                      />
+                      {comments.length ? (
+                        <MessageCircleOrange />
+                      ) : (
+                        <MessageCircle />
+                      )}
                       <Text style={styles.publicationItemReactionsText}>
                         {comments.length}
                       </Text>
@@ -97,7 +99,7 @@ const ProfileScreen = () => {
                     }
                   >
                     <View style={styles.publicationItemLocation}>
-                      <Image source={mapPin} />
+                      <MapPin />
                       <Text style={styles.publicationItemLocationText}>
                         {photoLocation}
                       </Text>

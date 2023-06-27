@@ -9,9 +9,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import mapPin from "../assets/mapPin.png";
-import camera from "../assets/camera.png";
-import trash from "../assets/trash.png";
 import contentBlock from "../assets/contentBlock.jpg";
 import { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
@@ -20,6 +17,7 @@ import * as Location from "expo-location";
 import { addPost } from "../redux/operations";
 import { useDispatch } from "react-redux";
 import { ActivityIndicator } from "react-native";
+import { CameraIcon, MapPin, Trash } from "../icons/SvgIcons";
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
@@ -98,7 +96,7 @@ const CreatePostsScreen = () => {
                       }
                     }}
                   >
-                    <Image source={camera} style={styles.cameraIcon} />
+                    <CameraIcon />
                   </TouchableOpacity>
                 </View>
               </Camera>
@@ -141,7 +139,7 @@ const CreatePostsScreen = () => {
               value={photoLocation}
               onChangeText={setPhotoLocation}
             />
-            <Image source={mapPin} style={styles.locationIcon} />
+            <MapPin style={styles.locationIcon} />
           </View>
           {isLoading ? (
             <ActivityIndicator
@@ -167,13 +165,14 @@ const CreatePostsScreen = () => {
       </ScrollView>
       <View style={styles.bottomMenu}>
         <TouchableOpacity
+          style={styles.trashBtn}
           onPress={() => {
             setTakenPhoto(null);
             setPhotoTitle("");
             setPhotoLocation("");
           }}
         >
-          <Image source={trash} />
+          <Trash />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -211,10 +210,13 @@ const styles = StyleSheet.create({
   },
   cameraIconContainer: {
     position: "absolute",
-  },
-  cameraIcon: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     width: 60,
     height: 60,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: "50%",
   },
   cameraDeniedAccessText: {
     position: "absolute",
@@ -278,6 +280,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
+  },
+  trashBtn: {
+    alignItems: "center",
+    width: 70,
+    paddingTop: 8,
+    paddingBottom: 8,
+    marginTop: 8,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 100,
   },
   activityIndicator: {
     marginTop: 16,

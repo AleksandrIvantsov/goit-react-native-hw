@@ -6,9 +6,6 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import mapPin from "../assets/mapPin.png";
-import messageCircle from "../assets/messageCircle.png";
-import messageCircleOrange from "../assets/messageCircleOrange.png";
 import userPhoto from "../assets/userPhoto.jpg";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +13,7 @@ import { getIsloading, getPosts, getUserInfo } from "../redux/selectors";
 import { useEffect } from "react";
 import { fetchPosts } from "../redux/operations";
 import { ActivityIndicator } from "react-native";
+import { MapPin, MessageCircle, MessageCircleOrange } from "../icons/SvgIcons";
 
 const PostsScreen = () => {
   const navigation = useNavigation();
@@ -70,11 +68,11 @@ const PostsScreen = () => {
                     }
                   >
                     <View style={styles.publicationItemReactions}>
-                      <Image
-                        source={
-                          comments.length ? messageCircleOrange : messageCircle
-                        }
-                      />
+                      {comments.length ? (
+                        <MessageCircleOrange />
+                      ) : (
+                        <MessageCircle />
+                      )}
                       <Text style={styles.publicationItemReactionsText}>
                         {comments.length}
                       </Text>
@@ -90,7 +88,7 @@ const PostsScreen = () => {
                     }
                   >
                     <View style={styles.publicationItemLocation}>
-                      <Image source={mapPin} />
+                      <MapPin />
                       <Text style={styles.publicationItemLocationText}>
                         {photoLocation}
                       </Text>

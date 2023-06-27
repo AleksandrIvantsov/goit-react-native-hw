@@ -16,7 +16,7 @@ import {
 const authPersistConfig = {
   key: "auth",
   storage: AsyncStorage,
-  blacklist: ["error"],
+  blacklist: ["registerError", "logInError"],
 };
 
 export const store = configureStore({

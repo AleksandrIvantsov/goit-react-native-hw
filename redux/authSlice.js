@@ -6,7 +6,8 @@ const initialState = {
   token: null,
   isLoggedIn: false,
   isRefreshing: false,
-  error: null,
+  registerError: null,
+  logInError: null,
 };
 
 const authSlice = createSlice({
@@ -16,7 +17,8 @@ const authSlice = createSlice({
     builder
       .addCase(register.pending, (state) => {
         state.isRefreshing = true;
-        state.error = null;
+        state.registerError = null;
+        state.logInError = null;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.user.uid = action.payload.localId;
@@ -24,21 +26,27 @@ const authSlice = createSlice({
         state.token = action.payload.idToken;
         state.isLoggedIn = true;
         state.isRefreshing = false;
-        state.error = null;
+        state.registerError = null;
+        state.logInError = null;
       })
       .addCase(register.rejected, (state, action) => {
-        state.error = action.payload;
+        state.registerError = action.payload;
+        state.logInError = null;
         state.isRefreshing = false;
       })
       .addCase(updateUserName.fulfilled, (state, action) => {
         state.user.name = action.payload;
-        state.error = null;
+        state.registerError = null;
+        state.logInError = null;
       })
       .addCase(updateUserName.rejected, (state, action) => {
-        state.error = action.payload;
+        state.registerError = action.payload;
+        state.logInError = null;
       })
       .addCase(logIn.pending, (state) => {
         state.isRefreshing = true;
+        state.logInError = null;
+        state.registerError = null;
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.user.uid = action.payload.localId;
@@ -47,11 +55,13 @@ const authSlice = createSlice({
         state.token = action.payload.idToken;
         state.isLoggedIn = true;
         state.isRefreshing = false;
-        state.error = null;
+        state.logInError = null;
+        state.registerError = null;
       })
       .addCase(logIn.rejected, (state, action) => {
-        state.error = action.payload;
+        state.logInError = action.payload;
         state.isRefreshing = false;
+        state.registerError = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.user.uid = null;
@@ -59,10 +69,12 @@ const authSlice = createSlice({
         state.user.email = null;
         state.token = null;
         state.isLoggedIn = false;
-        state.error = null;
+        state.logInError = null;
+        state.registerError = null;
       })
       .addCase(logout.rejected, (state, action) => {
-        state.error = action.payload;
+        state.logInError = action.payload;
+        state.registerError = null;
       });
   },
 });

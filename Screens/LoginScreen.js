@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAuthError, getIsLoggedIn } from "../redux/selectors";
+import { getIsLoggedIn, getLogInError } from "../redux/selectors";
 import { logIn } from "../redux/operations";
 import { getIsRefreshing } from "../redux/selectors";
 import { ActivityIndicator } from "react-native";
@@ -25,7 +25,7 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn);
   const isRefreshing = useSelector(getIsRefreshing);
-  const error = useSelector(getAuthError);
+  const logInError = useSelector(getLogInError);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -97,7 +97,7 @@ const LoginScreen = () => {
                 </Text>
               </Pressable>
             </View>
-            {error && (
+            {logInError && (
               <View style={styles.errorMessage}>
                 <Text style={styles.errorMessageText}>
                   Неправильний email або пароль. Спробуйте ще раз.

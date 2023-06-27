@@ -11,15 +11,14 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
-import arrowLeft from "../assets/arrowLeft.png";
 import ellipse from "../assets/ellipse.png";
-import arrowTop from "../assets/arrowTop.png";
 import userPhoto from "../assets/userPhoto.jpg";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../redux/operations";
 import { getPosts } from "../redux/selectors";
+import { ArrowLeft, ArrowUp } from "../icons/SvgIcons";
 
 const getPostComments = (posts, postId) => {
   const currentPost = posts.filter((post) => post.id === postId);
@@ -57,7 +56,7 @@ const CommentsScreen = () => {
           style={styles.arrowLeftIcon}
           onPress={() => navigation.goBack()}
         >
-          <Image source={arrowLeft} />
+          <ArrowLeft />
         </Pressable>
       </View>
       <ScrollView style={styles.publications}>
@@ -106,7 +105,7 @@ const CommentsScreen = () => {
           onChangeText={setCommentText}
         />
         <TouchableOpacity style={styles.commentBtn} onPress={handleSubmit}>
-          <Image source={arrowTop} />
+          <ArrowUp />
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
